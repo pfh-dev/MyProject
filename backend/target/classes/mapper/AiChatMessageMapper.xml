@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.AiChatMessageMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ai_chat_message (session_id, role, content, create_time)
+        values (#{sessionId}, #{role}, #{content}, #{createTime})
+    </insert>
+
+    <select id="selectBySessionId" resultType="com.petadopt.entity.AiChatMessage">
+        select * from ai_chat_message where session_id = #{sessionId} order by id asc
+    </select>
+</mapper>

@@ -1,0 +1,258 @@
+// ============================================================
+//  宠爱之家 · 设计系统 ——「暖阳手账」主题
+//  奶油纸底 · 陶土橙 · 深青点缀 · 编辑部衬线标题 · 圆润造型
+// ============================================================
+
+:root {
+  // —— 品牌色 ——
+  --primary: #e85d2b;          // 陶土橙（主）
+  --primary-deep: #cf4a1d;
+  --primary-soft: #fbe6d8;
+  --secondary: #0f8f7e;        // 深青（辅）
+  --secondary-soft: #d6efe9;
+  --accent: #f2b134;           // 暖黄（点缀）
+
+  // —— 暖调中性色 ——
+  --bg: #faf6ee;               // 奶油纸底
+  --surface: #fffdf8;          // 卡片面
+  --text: #3d322b;             // 暖深棕
+  --text-light: #8c7a6d;       // 暖灰
+  --border: #ece2d4;           // 暖边框
+
+  // —— 后台 ——
+  --sidebar-bg: #24303c;
+
+  // —— 字体 ——
+  --font-display: 'Noto Serif SC', 'Songti SC', 'STSong', 'SimSun', serif;
+  --font-body: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+
+  // —— 圆角 ——
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+
+  // —— 暖调阴影 ——
+  --shadow-sm: 0 2px 10px rgba(184, 128, 88, 0.08);
+  --shadow: 0 12px 30px rgba(184, 118, 76, 0.12);
+  --shadow-lg: 0 26px 60px rgba(150, 88, 48, 0.16);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background-color: var(--bg);
+  // 顶部暖光晕 + 极淡纸张颗粒，营造质感
+  background-image:
+    radial-gradient(1100px 480px at 12% -8%, rgba(232, 93, 43, 0.06), transparent 60%),
+    radial-gradient(900px 420px at 100% 0%, rgba(15, 143, 126, 0.05), transparent 55%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: 0.01em;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// —— 标题统一用衬线显示字体，营造编辑部/绘本质感 ——
+h1, h2, h3, .display {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+// ============================================================
+//  Element Plus 主题覆盖
+// ============================================================
+:root {
+  --el-color-primary: #e85d2b;
+  --el-color-primary-light-3: #ed7a4e;
+  --el-color-primary-light-5: #f29a75;
+  --el-color-primary-light-7: #f7c0a8;
+  --el-color-primary-light-8: #fad4c2;
+  --el-color-primary-light-9: #fce8dc;
+  --el-color-primary-dark-2: #cf4a1d;
+  --el-color-success: #0f8f7e;
+  --el-color-warning: #f2b134;
+  --el-border-radius-base: 10px;
+  --el-border-radius-small: 8px;
+  --el-border-radius-round: 999px;
+  --el-text-color-primary: #3d322b;
+  --el-text-color-regular: #6b5d52;
+  --el-border-color: #ece2d4;
+  --el-border-color-light: #f2e9dd;
+  --el-fill-color-blank: #fffdf8;
+}
+
+// 按钮：圆润、柔和阴影、悬浮抬升
+.el-button {
+  font-weight: 500;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+
+  &.is-round {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+}
+
+.el-button--primary {
+  --el-button-bg-color: var(--primary);
+  --el-button-border-color: var(--primary);
+  --el-button-hover-bg-color: var(--primary-deep);
+  --el-button-hover-border-color: var(--primary-deep);
+  box-shadow: 0 6px 16px rgba(232, 93, 43, 0.28);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(232, 93, 43, 0.34);
+  }
+}
+
+// 输入框
+.el-input__wrapper,
+.el-textarea__inner {
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px var(--border) inset;
+  transition: box-shadow 0.18s ease;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1.5px var(--primary) inset !important;
+}
+
+// 卡片
+.el-card {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+// 标签
+.el-tag {
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+// 对话框
+.el-dialog {
+  border-radius: var(--radius-lg);
+}
+
+// 分页
+.el-pagination.is-background .el-pager li {
+  border-radius: 8px;
+}
+
+// ============================================================
+//  通用工具类
+// ============================================================
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// 卡片悬浮
+.pet-card-hover {
+  transition: transform 0.28s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.28s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+  }
+}
+
+// 文本省略
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 分区标题（带装饰爪印）
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 14px 0 0 var(--secondary), 28px 0 0 var(--accent);
+    }
+  }
+
+  .more {
+    font-size: 14px;
+    color: var(--text-light);
+    transition: color 0.18s ease;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+// 进入动画
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: fade-up 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+// 自定义滚动条
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e2d6c6;
+  border-radius: 999px;
+  border: 2px solid var(--bg);
+
+  &:hover {
+    background: #d4c4ae;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}

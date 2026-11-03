@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.PetMapper">
+
+    <sql id="joinSelect">
+        select p.*, c.name as category_name
+        from pet p
+        left join pet_category c on p.category_id = c.id
+    </sql>
+
+    <select id="selectById" resultType="com.petadopt.entity.Pet">
+        <include refid="joinSelect"/>
+        where p.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into pet (name, category_id, breed, gender, age, vaccine, sterilization, description, detail, cover_img, images, status, source, review_status, create_user_id, create_time)
+        values (#{name}, #{categoryId}, #{breed}, #{gender}, #{age}, #{vaccine}, #{sterilization}, #{description}, #{detail}, #{coverImg}, #{images}, #{status}, #{source}, #{reviewStatus}, #{createUserId}, #{createTime})
+    </insert>
+
+    <update id="update">
+        update pet
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="breed != null">breed = #{breed},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="vaccine != null">vaccine = #{vaccine},</if>
+            <if test="sterilization != null">sterilization = #{sterilization},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="detail != null">detail = #{detail},</if>
+            <if test="coverImg != null">cover_img = #{coverImg},</if>
+            <if test="images != null">images = #{images},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="reviewStatus != null">review_status = #{reviewStatus},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from pet where id = #{id}
+    </delete>
+
+    <select id="selectList" resultType="com.petadopt.entity.Pet">
+        <include refid="joinSelect"/>
+        <where>
+            <if test="name != null and name != ''">
+                and p.name like concat('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null">
+                and p.category_id = #{categoryId}
+            </if>
+            <if test="status != null and status != ''">
+                and p.status = #{status}
+            </if>
+            <if test="reviewStatus != null and reviewStatus != ''">
+                and p.review_status = #{reviewStatus}
+            </if>
+        </where>
+        order by p.create_time desc
+    </select>
+
+    <select id="selectPublicList" resultType="com.petadopt.entity.Pet">
+        <include refid="joinSelect"/>
+        where p.review_status = '已通过' and p.status in ('待领养', '领养中')
+        <if test="name != null and name != ''">
+            and p.name like concat('%', #{name}, '%')
+        </if>
+        <if test="categoryId != null">
+            and p.category_id = #{categoryId}
+        </if>
+        order by p.create_time desc
+    </select>
+
+    <update id="updateStatus">
+        update pet set status = #{status} where id = #{id}
+    </update>
+
+    <update id="updateReviewStatus">
+        update pet set review_status = #{reviewStatus} where id = #{id}
+    </update>
+</mapper>

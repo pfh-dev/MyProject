@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.ArticleMapper">
+
+    <select id="selectById" resultType="com.petadopt.entity.Article">
+        select * from article where id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into article (title, cover, content, type, author, view_count, create_time)
+        values (#{title}, #{cover}, #{content}, #{type}, #{author}, #{viewCount}, #{createTime})
+    </insert>
+
+    <update id="update">
+        update article
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="cover != null">cover = #{cover},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="author != null">author = #{author},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from article where id = #{id}
+    </delete>
+
+    <select id="selectList" resultType="com.petadopt.entity.Article">
+        select * from article
+        <where>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and title like concat('%', #{keyword}, '%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <update id="incrementView">
+        update article set view_count = view_count + 1 where id = #{id}
+    </update>
+</mapper>

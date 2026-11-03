@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.RescueMapper">
+
+    <sql id="joinSelect">
+        select r.*, u1.nickname as reporter_name, u2.nickname as assignee_name
+        from rescue r
+        left join `user` u1 on r.reporter_id = u1.id
+        left join `user` u2 on r.assignee_id = u2.id
+    </sql>
+
+    <select id="selectById" resultType="com.petadopt.entity.Rescue">
+        <include refid="joinSelect"/>
+        where r.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into rescue (title, description, images, location, contact, status, reporter_id, create_time)
+        values (#{title}, #{description}, #{images}, #{location}, #{contact}, #{status}, #{reporterId}, #{createTime})
+    </insert>
+
+    <update id="update">
+        update rescue
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="images != null">images = #{images},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="contact != null">contact = #{contact},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from rescue where id = #{id}
+    </delete>
+
+    <select id="selectList" resultType="com.petadopt.entity.Rescue">
+        <include refid="joinSelect"/>
+        <where>
+            <if test="status != null and status != ''">
+                and r.status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and r.title like concat('%', #{keyword}, '%')
+            </if>
+        </where>
+        order by r.create_time desc
+    </select>
+
+    <select id="selectByReporterId" resultType="com.petadopt.entity.Rescue">
+        <include refid="joinSelect"/>
+        where r.reporter_id = #{reporterId}
+        order by r.create_time desc
+    </select>
+
+    <update id="updateStatus">
+        update rescue set status = #{status} where id = #{id}
+    </update>
+
+    <update id="assign">
+        update rescue set assignee_id = #{assigneeId}, status = #{status} where id = #{id}
+    </update>
+
+    <update id="handle">
+        update rescue
+        set status = #{status}, handle_remark = #{handleRemark}, handle_time = #{handleTime}
+        where id = #{id}
+    </update>
+</mapper>

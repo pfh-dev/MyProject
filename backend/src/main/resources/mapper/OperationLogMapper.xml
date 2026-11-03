@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.OperationLogMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into operation_log (user_id, username, module, operation, params, ip, create_time)
+        values (#{userId}, #{username}, #{module}, #{operation}, #{params}, #{ip}, #{createTime})
+    </insert>
+
+    <select id="selectList" resultType="com.petadopt.entity.OperationLog">
+        select * from operation_log
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and (username like concat('%', #{keyword}, '%') or operation like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.VolunteerMapper">
+
+    <sql id="joinSelect">
+        select v.*, u.username as username
+        from volunteer v
+        left join `user` u on v.user_id = u.id
+    </sql>
+
+    <select id="selectById" resultType="com.petadopt.entity.Volunteer">
+        <include refid="joinSelect"/>
+        where v.id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultType="com.petadopt.entity.Volunteer">
+        select * from volunteer where user_id = #{userId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into volunteer (user_id, real_name, phone, skills, available_time, status, apply_time)
+        values (#{userId}, #{realName}, #{phone}, #{skills}, #{availableTime}, #{status}, #{applyTime})
+    </insert>
+
+    <delete id="deleteById">
+        delete from volunteer where id = #{id}
+    </delete>
+
+    <select id="selectList" resultType="com.petadopt.entity.Volunteer">
+        <include refid="joinSelect"/>
+        <where>
+            <if test="status != null and status != ''">
+                and v.status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and (v.real_name like concat('%', #{keyword}, '%') or u.username like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        order by v.apply_time desc
+    </select>
+
+    <select id="selectApproved" resultType="com.petadopt.entity.Volunteer">
+        select * from volunteer where status = '已通过' order by apply_time asc
+    </select>
+
+    <update id="updateStatus">
+        update volunteer set status = #{status} where id = #{id}
+    </update>
+</mapper>

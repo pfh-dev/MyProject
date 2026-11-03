@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.AdoptApplicationMapper">
+
+    <sql id="joinSelect">
+        select a.*, p.name as pet_name, p.cover_img as pet_cover_img, u.username as username
+        from adopt_application a
+        left join pet p on a.pet_id = p.id
+        left join `user` u on a.user_id = u.id
+    </sql>
+
+    <select id="selectById" resultType="com.petadopt.entity.AdoptApplication">
+        <include refid="joinSelect"/>
+        where a.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into adopt_application (pet_id, user_id, applicant_name, phone, address, occupation, has_experience, reason, status, apply_time)
+        values (#{petId}, #{userId}, #{applicantName}, #{phone}, #{address}, #{occupation}, #{hasExperience}, #{reason}, #{status}, #{applyTime})
+    </insert>
+
+    <delete id="deleteById">
+        delete from adopt_application where id = #{id}
+    </delete>
+
+    <select id="selectList" resultType="com.petadopt.entity.AdoptApplication">
+        <include refid="joinSelect"/>
+        <where>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and (a.applicant_name like concat('%', #{keyword}, '%') or p.name like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        order by a.apply_time desc
+    </select>
+
+    <select id="selectByUserId" resultType="com.petadopt.entity.AdoptApplication">
+        <include refid="joinSelect"/>
+        where a.user_id = #{userId}
+        order by a.apply_time desc
+    </select>
+
+    <select id="selectByPetAndUser" resultType="com.petadopt.entity.AdoptApplication">
+        select * from adopt_application where pet_id = #{petId} and user_id = #{userId} and status = '待审核'
+    </select>
+
+    <update id="updateAudit">
+        update adopt_application
+        set status = #{status}, audit_user_id = #{auditUserId}, audit_time = #{auditTime}, audit_remark = #{auditRemark}
+        where id = #{id}
+    </update>
+</mapper>

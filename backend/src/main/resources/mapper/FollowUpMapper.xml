@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.FollowUpMapper">
+
+    <sql id="joinSelect">
+        select f.*, v.real_name as volunteer_name, p.name as pet_name, p.cover_img as pet_cover_img,
+               a.applicant_name as applicant_name, a.phone as phone, a.audit_time as audit_time
+        from follow_up f
+        left join volunteer v on f.volunteer_id = v.id
+        left join adopt_application a on f.adopt_id = a.id
+        left join pet p on a.pet_id = p.id
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into follow_up (adopt_id, volunteer_id, content, pet_condition, is_normal, follow_time, create_time)
+        values (#{adoptId}, #{volunteerId}, #{content}, #{petCondition}, #{isNormal}, #{followTime}, #{createTime})
+    </insert>
+
+    <select id="selectByAdoptId" resultType="com.petadopt.entity.FollowUp">
+        <include refid="joinSelect"/>
+        where f.adopt_id = #{adoptId}
+        order by f.create_time desc
+    </select>
+
+    <select id="selectList" resultType="com.petadopt.entity.FollowUp">
+        <include refid="joinSelect"/>
+        <where>
+            <!-- 回访状态筛选：content 为空表示「待回访」计划，非空表示「已回访」记录 -->
+            <if test="status == '待回访'">
+                and f.content is null
+            </if>
+            <if test="status == '已回访'">
+                and f.content is not null
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and (p.name like concat('%', #{keyword}, '%') or v.real_name like concat('%', #{keyword}, '%') or a.applicant_name like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        order by f.create_time desc
+    </select>
+
+    <delete id="deleteById">
+        delete from follow_up where id = #{id}
+    </delete>
+
+    <!-- 登记回访：只更新非空字段，避免把已有内容覆盖成空 -->
+    <update id="updateById">
+        update follow_up
+        <set>
+            <if test="volunteerId != null">volunteer_id = #{volunteerId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="petCondition != null">pet_condition = #{petCondition},</if>
+            <if test="isNormal != null">is_normal = #{isNormal},</if>
+            <if test="followTime != null">follow_time = #{followTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

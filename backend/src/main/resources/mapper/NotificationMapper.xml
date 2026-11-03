@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.NotificationMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into notification (user_id, title, content, type, biz_id, is_read, create_time)
+        values (#{userId}, #{title}, #{content}, #{type}, #{bizId}, #{isRead}, #{createTime})
+    </insert>
+
+    <select id="selectByUserId" resultType="com.petadopt.entity.Notification">
+        select * from notification where user_id = #{userId} order by create_time desc
+    </select>
+
+    <update id="updateRead">
+        update notification set is_read = 1 where id = #{id}
+    </update>
+
+    <update id="updateReadAll">
+        update notification set is_read = 1 where user_id = #{userId}
+    </update>
+
+    <select id="countUnread" resultType="long">
+        select count(*) from notification where user_id = #{userId} and is_read = 0
+    </select>
+</mapper>

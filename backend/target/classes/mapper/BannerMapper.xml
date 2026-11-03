@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petadopt.mapper.BannerMapper">
+
+    <select id="selectAll" resultType="com.petadopt.entity.Banner">
+        select * from banner order by sort asc, id asc
+    </select>
+
+    <select id="selectAllWithStatus" resultType="com.petadopt.entity.Banner">
+        select * from banner where status = 1 order by sort asc, id asc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into banner (title, img, link, sort, status) values (#{title}, #{img}, #{link}, #{sort}, #{status})
+    </insert>
+
+    <update id="update">
+        update banner
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="link != null">link = #{link},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from banner where id = #{id}
+    </delete>
+</mapper>
