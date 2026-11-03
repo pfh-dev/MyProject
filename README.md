@@ -176,8 +176,6 @@ pet-adoption-platform/
 
 ## 6. LangChain4j Agent 实现思路
 
-复用 `E:\Langchain4j` 已验证的模式，迁移至 `com.petadopt.ai`：
-
 1. **`PetAssistantService`**（`@AiService` 接口）
    - `Flux<String> chat(@MemoryId String memoryId, @UserMessage String message)` —— 流式对话
    - `@SystemMessage(fromResource = "prompt/system-prompt.txt")` —— 注入「小安」人设
